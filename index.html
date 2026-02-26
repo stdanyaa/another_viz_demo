@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="Unified Sensor Simulation for Autonomous Driving (XSIM)">
+  <meta name="description" content="XSIM is a unified sensor simulation framework for autonomous driving that models camera-LiDAR temporal/spatial offsets for realistic rendering and evaluation.">
+  <meta name="keywords" content="autonomous driving, sensor simulation, LiDAR, camera-LiDAR fusion, Gaussian splatting, neural rendering, 3DGS, robotics, computer vision">
+  <meta name="author" content="Nikolay Patakin, Arsenii Shirokov, Anton Konushin, Dmitry Senushkin">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="XSIM">
+  <meta property="og:title" content="Unified Sensor Simulation for Autonomous Driving (XSIM)">
+  <meta property="og:description" content="Unified sensor simulation for autonomous driving with explicit modeling of LiDAR temporal/spatial discontinuity and realistic multi-sensor rendering.">
+  <meta property="og:url" content="https://arxiv.org/abs/2602.05617">
+  <!-- TODO: Create a 1200x630px preview image and update path -->
+  <meta property="og:image" content="https://YOUR_DOMAIN.com/static/images/social_preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Unified Sensor Simulation for Autonomous Driving (XSIM) preview">
+  <meta property="article:author" content="Nikolay Patakin">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="Autonomous Driving">
+  <meta property="article:tag" content="Sensor Simulation">
+  <meta property="article:tag" content="LiDAR">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unified Sensor Simulation for Autonomous Driving (XSIM)">
+  <meta name="twitter:description" content="Unified sensor simulation for autonomous driving with realistic camera/LiDAR modeling and rendering.">
+  <!-- TODO: Same as social preview image above -->
+  <meta name="twitter:image" content="https://YOUR_DOMAIN.com/static/images/social_preview.png">
+  <meta name="twitter:image:alt" content="Unified Sensor Simulation for Autonomous Driving (XSIM) preview">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="Unified Sensor Simulation for Autonomous Driving">
+  <meta name="citation_author" content="Patakin, Nikolay">
+  <meta name="citation_author" content="Shirokov, Arsenii">
+  <meta name="citation_author" content="Konushin, Anton">
+  <meta name="citation_author" content="Senushkin, Dmitry">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="arXiv">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2602.05617">
+  
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://documentcloud.adobe.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+
+  <title>Unified Sensor Simulation for Autonomous Driving (XSIM) | Project Page</title>
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="static/images/favicon.ico">
+  
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+  <!-- Fallback for browsers that don't support preload -->
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+  
+  <!-- Fonts - Optimized loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Defer non-critical JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+  
+  <!-- Structured Data for Academic Papers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Unified Sensor Simulation for Autonomous Driving",
+    "description": "XSIM is a unified sensor simulation framework for autonomous driving that models camera-LiDAR temporal/spatial offsets for realistic rendering and evaluation.",
+    "author": [
+      { "@type": "Person", "name": "Nikolay Patakin", "affiliation": { "@type": "Organization", "name": "Lomonosov Moscow State University" } },
+      { "@type": "Person", "name": "Arsenii Shirokov", "affiliation": { "@type": "Organization", "name": "Lomonosov Moscow State University" } },
+      { "@type": "Person", "name": "Anton Konushin", "affiliation": { "@type": "Organization", "name": "Lomonosov Moscow State University" } },
+      { "@type": "Person", "name": "Dmitry Senushkin", "affiliation": { "@type": "Organization", "name": "Lomonosov Moscow State University" } }
+    ],
+    "datePublished": "2026",
+    "publisher": {
+      "@type": "Organization",
+      "name": "arXiv"
+    },
+    "url": "https://arxiv.org/abs/2602.05617",
+    "image": "https://YOUR_DOMAIN.com/static/images/social_preview.png",
+    "keywords": ["autonomous driving", "sensor simulation", "LiDAR", "Gaussian splatting", "computer vision"],
+    "abstract": "Unified sensor simulation for autonomous driving with explicit modeling of temporal and spatial sensor effects, including camera and LiDAR signals, for realistic rendering and downstream evaluation.",
+    "citation": "Patakin, Shirokov, Konushin, Senushkin. Unified Sensor Simulation for Autonomous Driving. arXiv:2602.05617 (2026).",
+    "isAccessibleForFree": true,
+    "mainEntity": {
+      "@type": "WebPage",
+      "@id": "https://arxiv.org/abs/2602.05617"
+    },
+    "about": [
+      { "@type": "Thing", "name": "Autonomous Driving" },
+      { "@type": "Thing", "name": "Sensor Simulation" },
+      { "@type": "Thing", "name": "LiDAR" }
+    ]
+  }
+  </script>
+  
+  <!-- Website/Organization Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "XSIM",
+    "codeRepository": "https://github.com/whesense/XSIM",
+    "programmingLanguage": "Python",
+    "url": "https://github.com/whesense/XSIM",
+    "description": "Official code repository for the XSIM project."
+  }
+  </script>
+</head>
+<body>
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+    <!-- Project header -->
+    <section class="hero is-light publication-header xsim-hero-top">
+      <div class="hero-body">
+        <div class="container is-max-widescreen">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <h1 class="title publication-title xsim-main-title">
+                Unified Sensor Simulation<br>for Autonomous Driving
+              </h1>
+
+              <div class="publication-authors xsim-authors">
+                <span class="author-block">Nikolay Patakin, Arsenii Shirokov, Anton Konushin, Dmitry Senushkin</span>
+              </div>
+
+              <div class="publication-authors xsim-affiliation">
+                <span class="author-block">Lomonosov Moscow State University</span>
+              </div>
+
+              <div class="column has-text-centered">
+                <div class="publication-links xsim-link-row">
+                  <span class="link-block">
+                    <a href="https://arxiv.org/pdf/2602.05617" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                      <span>Paper</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a href="https://github.com/whesense/XSIM" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon"><i class="fab fa-github"></i></span>
+                      <span>Code</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a href="https://arxiv.org/abs/2602.05617" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon"><i class="ai ai-arxiv"></i></span>
+                      <span>arXiv</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a href="#" class="external-link button is-normal is-rounded is-dark" title="Placeholder link, keep for possible future HuggingFace page">
+                      <span class="icon" aria-hidden="true">🤗</span>
+                      <span>HuggingFace</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Teaser / Hero Composite Placeholder -->
+    <section class="hero teaser">
+      <div class="container is-max-desktop">
+        <div class="hero-body">
+          <div class="box">
+            <video autoplay controls muted loop playsinline preload="metadata" width="100%">
+              <source src="static/videos/hero.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section is-light" id="method">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Method</h2>
+        <div class="content method-content">
+          <p>
+            TODO: write the method narrative clearly from the paper. Start with the LiDAR temporal/spatial
+            discontinuity problem (points captured at different times and poses), then describe the XSIM framework
+            and the LiDAR opacity contribution.
+          </p>
+
+          <p>
+            TODO: Problem statement + plain-language explanation (Figure 4).
+          </p>
+          <figure class="method-inline-figure">
+            <img src="static/images/method/figure_4.png" alt="Figure 4 from the paper showing the LiDAR temporal/spatial discontinuity problem" loading="lazy">
+            <figcaption>Figure 4. Problem / discontinuity (TODO caption text)</figcaption>
+          </figure>
+
+          <p>
+            TODO: Contribution 1: adaptation of 3D Gaussian Splatting + phase/motion modeling
+          </p>
+
+          <p>
+            TODO: Discontinuity solution illustration (Figure 6).
+          </p>
+          <figure class="method-inline-figure">
+            <img src="static/images/method/figure_6.png" alt="Figure 6 from the paper showing the proposed discontinuity solution mechanism" loading="lazy">
+            <figcaption>Figure 6. Solution mechanism (TODO caption text)</figcaption>
+          </figure>
+
+          <p>
+            TODO: Contribution 2: LiDAR opacity (Figure 5).
+          </p>
+          <figure class="method-inline-figure">
+            <img src="static/images/method/figure_5.png" alt="Figure 5 from the paper illustrating the LiDAR opacity component" loading="lazy">
+            <figcaption>Figure 5. LiDAR opacity (TODO caption text)</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="results">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Visual Results & Comparisons</h2>
+        <div class="content">
+          <p>
+            This section will hold the only interactive block for now: a synchronized two-video comparison slider.
+          </p>
+          <ul>
+            <li>Standard views / color visualizations</li>
+            <li>Novel-view videos</li>
+            <li>Depth maps</li>
+            <li>Static LiDAR renders / stitched LiDAR video</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h3 class="title is-5">Two-Video Comparison Slider (Placeholder)</h3>
+          <p class="mb-3">
+            We will replace these placeholders with matched left/right videos from <code>xsim-proxy-tree/</code>
+            and sync playback + reveal slider.
+          </p>
+          <div class="columns">
+            <div class="column">
+              <p class="has-text-weight-semibold">Left video</p>
+              <video controls muted preload="metadata" width="100%">
+                <source src="static/videos/carousel1.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="column">
+              <p class="has-text-weight-semibold">Right video</p>
+              <video controls muted preload="metadata" width="100%">
+                <source src="static/videos/carousel2.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <label class="label" for="compare-slider-placeholder">Reveal slider (UI placeholder)</label>
+          <input id="compare-slider-placeholder" class="slider is-fullwidth" step="1" min="0" max="100" value="50" type="range">
+        </div>
+      </div>
+    </section>
+
+    <section class="section is-light" id="simulator">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Interactive Simulator</h2>
+        <div class="content">
+          <p>
+            Placeholder for a video that demonstrates simulator controls and interaction workflow.
+          </p>
+        </div>
+        <video controls muted preload="metadata" width="100%">
+          <source src="static/videos/carousel3.mp4" type="video/mp4">
+        </video>
+      </div>
+    </section>
+  </main>
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <div class="bibtex-header">
+        <h2 class="title">BibTeX</h2>
+        <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+          <i class="fas fa-copy"></i>
+          <span class="copy-text">Copy</span>
+        </button>
+      </div>
+      <pre id="bibtex-code"><code>@misc{patakin2026unifiedsensorsimulationautonomous,
+      title={Unified Sensor Simulation for Autonomous Driving}, 
+      author={Nikolay Patakin and Arsenii Shirokov and Anton Konushin and Dmitry Senushkin},
+      year={2026},
+      eprint={2602.05617},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2602.05617}, 
+}</code></pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+              You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
