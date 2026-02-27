@@ -70,6 +70,7 @@
   <!-- Critical CSS - Load synchronously -->
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="shared/css/dataset-scene-selector.css">
   
   <!-- Non-critical CSS - Load asynchronously -->
   <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -94,6 +95,8 @@
   <script defer src="static/js/fontawesome.all.min.js"></script>
   <script defer src="static/js/bulma-carousel.min.js"></script>
   <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="shared/data/viz1-scene-selector-data.js"></script>
+  <script defer src="shared/js/dataset-scene-selector.js"></script>
   <script defer src="static/js/index.js"></script>
   
   <!-- Structured Data for Academic Papers -->
@@ -271,6 +274,21 @@
             <li>Depth maps</li>
             <li>Static LiDAR renders / stitched LiDAR video</li>
           </ul>
+        </div>
+
+        <div class="box">
+          <h3 class="title is-5">Visualization 1: Scene Selector</h3>
+          <p class="mb-3">
+            Scene selector is populated from available proxy scenes with real thumbnails and scene videos.
+          </p>
+          <div id="viz1-scene-selector" class="scene-selector" aria-label="Dataset and scene selector"></div>
+          <div class="mt-4">
+            <p id="viz1-scene-video-label" class="has-text-weight-semibold mb-2">Selected scene video</p>
+            <video id="viz1-scene-video" controls muted playsinline preload="metadata" width="100%">
+              <source id="viz1-scene-video-source" src="" type="video/mp4">
+            </video>
+            <p id="viz1-scene-video-empty" class="is-size-7 has-text-grey mt-2" hidden>No video URL for selected scene.</p>
+          </div>
         </div>
 
         <div class="box">

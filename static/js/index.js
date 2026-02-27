@@ -123,6 +123,68 @@ function setupVideoCarouselAutoplay() {
     });
 }
 
+function initializeViz1SceneSelector() {
+    const container = document.getElementById('viz1-scene-selector');
+    if (!container) return;
+    if (typeof DatasetSceneSelector === 'undefined') {
+        console.warn('DatasetSceneSelector module is not loaded.');
+        return;
+    }
+
+    const config = window.XSIM_VIZ1_SCENE_SELECTOR_DATA || {};
+    const datasets = Array.isArray(config.datasets) ? config.datasets : [];
+
+    const selector = new DatasetSceneSelector(container, {
+        datasets: datasets,
+        onSelect: function(payload) {
+            const sceneUrl = payload && payload.scene ? payload.scene.sceneUrl || '' : '';
+            container.dataset.selectedSceneUrl = sceneUrl;
+            updateViz1ScenePreview(payload);
+            container.dispatchEvent(new CustomEvent('scenechange', { detail: payload }));
+        }
+    });
+
+    selector.init();
+    window.xsimViz1SceneSelector = selector;
+}
+
+function updateViz1ScenePreview(payload) {
+    const video = document.getElementById('viz1-scene-video');
+    const source = document.getElementById('viz1-scene-video-source');
+    const label = document.getElementById('viz1-scene-video-label');
+    const empty = document.getElementById('viz1-scene-video-empty');
+    if (!video || !source) return;
+
+    const datasetLabel = payload && payload.dataset ? (payload.dataset.label || payload.dataset.id || '') : '';
+    const sceneLabel = payload && payload.scene ? (payload.scene.label || payload.scene.id || '') : '';
+    const sceneUrl = payload && payload.scene ? (payload.scene.sceneUrl || '') : '';
+
+    if (label) {
+        if (datasetLabel && sceneLabel) {
+            label.textContent = datasetLabel + ' - ' + sceneLabel;
+        } else if (sceneLabel) {
+            label.textContent = sceneLabel;
+        } else {
+            label.textContent = 'Selected scene video';
+        }
+    }
+
+    if (!sceneUrl) {
+        source.removeAttribute('src');
+        video.load();
+        video.hidden = true;
+        if (empty) empty.hidden = false;
+        return;
+    }
+
+    if (source.getAttribute('src') !== sceneUrl) {
+        source.setAttribute('src', sceneUrl);
+        video.load();
+    }
+    video.hidden = false;
+    if (empty) empty.hidden = true;
+}
+
 $(document).ready(function() {
     // Check for click events on the navbar burger icon
 
@@ -146,5 +208,8 @@ $(document).ready(function() {
     
     // Setup video autoplay for carousel
     setupVideoCarouselAutoplay();
+
+    // Dataset + scene selector (Viz 1)
+    initializeViz1SceneSelector();
 
 })
