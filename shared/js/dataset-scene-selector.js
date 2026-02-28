@@ -19,7 +19,9 @@
           id: sceneId,
           label: String(rawScene.label || sceneId),
           thumbnail: String(rawScene.thumbnail || ""),
-          sceneUrl: String(rawScene.sceneUrl || "")
+          sceneUrl: String(rawScene.sceneUrl || ""),
+          colorUrl: String(rawScene.colorUrl || ""),
+          depthUrl: String(rawScene.depthUrl || "")
         };
       })
       .filter(Boolean);

@@ -71,6 +71,7 @@
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/index.css">
   <link rel="stylesheet" href="shared/css/dataset-scene-selector.css">
+  <link rel="stylesheet" href="shared/css/viz2-color-depth-slider.css">
   
   <!-- Non-critical CSS - Load asynchronously -->
   <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -96,6 +97,7 @@
   <script defer src="static/js/bulma-carousel.min.js"></script>
   <script defer src="static/js/bulma-slider.min.js"></script>
   <script defer src="shared/data/viz1-scene-selector-data.js"></script>
+  <script defer src="shared/data/viz2-color-depth-data.js"></script>
   <script defer src="shared/js/dataset-scene-selector.js"></script>
   <script defer src="static/js/index.js"></script>
   
@@ -266,24 +268,22 @@
         <h2 class="title is-3">Visual Results & Comparisons</h2>
         <div class="content">
           <p>
-            This section will hold the only interactive block for now: a synchronized two-video comparison slider.
+            This section contains two interactive visualizations.
           </p>
           <ul>
-            <li>Standard views / color visualizations</li>
-            <li>Novel-view videos</li>
-            <li>Depth maps</li>
-            <li>Static LiDAR renders / stitched LiDAR video</li>
+            <li>Viz 1: scene selector with circle (novel-view) videos</li>
+            <li>Viz 2: color/depth synchronized slider for regular views</li>
           </ul>
         </div>
 
         <div class="box">
           <h3 class="title is-5">Visualization 1: Scene Selector</h3>
           <p class="mb-3">
-            Scene selector is populated from available proxy scenes with real thumbnails and scene videos.
+            Select a scene to view the corresponding circle trajectory (novel-view) video.
           </p>
           <div id="viz1-scene-selector" class="scene-selector" aria-label="Dataset and scene selector"></div>
           <div class="mt-4">
-            <p id="viz1-scene-video-label" class="has-text-weight-semibold mb-2">Selected scene video</p>
+            <p id="viz1-scene-video-label" class="has-text-weight-semibold mb-2">Selected circle video</p>
             <video id="viz1-scene-video" controls muted playsinline preload="metadata" width="100%">
               <source id="viz1-scene-video-source" src="" type="video/mp4">
             </video>
@@ -292,27 +292,30 @@
         </div>
 
         <div class="box">
-          <h3 class="title is-5">Two-Video Comparison Slider (Placeholder)</h3>
+          <h3 class="title is-5">Visualization 2: Color / Depth Slider</h3>
           <p class="mb-3">
-            We will replace these placeholders with matched left/right videos from <code>xsim-proxy-tree/</code>
-            and sync playback + reveal slider.
+            Select a scene and compare regular-view color and depth videos with a synchronized reveal slider.
           </p>
-          <div class="columns">
-            <div class="column">
-              <p class="has-text-weight-semibold">Left video</p>
-              <video controls muted preload="metadata" width="100%">
-                <source src="static/videos/carousel1.mp4" type="video/mp4">
+          <div id="viz2-scene-selector" class="scene-selector" aria-label="Color and depth scene selector"></div>
+          <div class="mt-4">
+            <p id="viz2-color-depth-label" class="has-text-weight-semibold mb-2">Color / Depth</p>
+            <div class="viz2-slider-viewer" id="viz2-color-depth-viewer">
+              <video id="viz2-depth-video" controls muted playsinline preload="metadata">
+                <source id="viz2-depth-video-source" src="" type="video/mp4">
               </video>
-            </div>
-            <div class="column">
-              <p class="has-text-weight-semibold">Right video</p>
-              <video controls muted preload="metadata" width="100%">
-                <source src="static/videos/carousel2.mp4" type="video/mp4">
+              <video id="viz2-color-video" class="viz2-slider-viewer__color-video" muted playsinline preload="metadata">
+                <source id="viz2-color-video-source" src="" type="video/mp4">
               </video>
+              <div id="viz2-color-depth-divider" class="viz2-slider-viewer__divider"></div>
             </div>
+            <label class="label mt-3" for="viz2-reveal-slider">Color / Depth slider</label>
+            <input id="viz2-reveal-slider" class="slider is-fullwidth" step="1" min="0" max="100" value="50" type="range">
+            <div class="viz2-legend">
+              <span>Depth</span>
+              <span>Color</span>
+            </div>
+            <p id="viz2-color-depth-empty" class="is-size-7 has-text-grey mt-2" hidden>Missing color or depth URL for this scene.</p>
           </div>
-          <label class="label" for="compare-slider-placeholder">Reveal slider (UI placeholder)</label>
-          <input id="compare-slider-placeholder" class="slider is-fullwidth" step="1" min="0" max="100" value="50" type="range">
         </div>
       </div>
     </section>

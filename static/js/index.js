@@ -165,7 +165,7 @@ function updateViz1ScenePreview(payload) {
         } else if (sceneLabel) {
             label.textContent = sceneLabel;
         } else {
-            label.textContent = 'Selected scene video';
+            label.textContent = 'Selected circle video';
         }
     }
 
@@ -182,6 +182,164 @@ function updateViz1ScenePreview(payload) {
         video.load();
     }
     video.hidden = false;
+    if (empty) empty.hidden = true;
+}
+
+function syncVideoPair(videoA, videoB) {
+    if (!videoA || !videoB) return;
+    if (videoA.dataset.syncedWith === videoB.id && videoB.dataset.syncedWith === videoA.id) {
+        return;
+    }
+
+    var isSyncing = false;
+
+    function syncTime(src, dst) {
+        if (isSyncing) return;
+        var delta = Math.abs((dst.currentTime || 0) - (src.currentTime || 0));
+        if (delta < 0.06) return;
+        isSyncing = true;
+        try {
+            dst.currentTime = src.currentTime;
+        } catch (e) {
+            // no-op
+        }
+        isSyncing = false;
+    }
+
+    function syncPlayState(src, dst) {
+        if (src.paused) return;
+        var p = dst.play();
+        if (p && typeof p.catch === 'function') {
+            p.catch(function() {});
+        }
+    }
+
+    [videoA, videoB].forEach(function(video, index) {
+        var other = index === 0 ? videoB : videoA;
+        video.addEventListener('play', function() {
+            syncPlayState(video, other);
+        });
+        video.addEventListener('pause', function() {
+            if (!other.paused) {
+                other.pause();
+            }
+        });
+        video.addEventListener('seeking', function() {
+            syncTime(video, other);
+        });
+        video.addEventListener('timeupdate', function() {
+            syncTime(video, other);
+        });
+        video.addEventListener('ratechange', function() {
+            if (other.playbackRate !== video.playbackRate) {
+                other.playbackRate = video.playbackRate;
+            }
+        });
+    });
+
+    videoA.dataset.syncedWith = videoB.id || 'paired';
+    videoB.dataset.syncedWith = videoA.id || 'paired';
+}
+
+function setVideoSource(videoEl, sourceEl, url) {
+    if (!videoEl || !sourceEl) return;
+    if (!url) {
+        sourceEl.removeAttribute('src');
+        videoEl.load();
+        return;
+    }
+    if (sourceEl.getAttribute('src') !== url) {
+        sourceEl.setAttribute('src', url);
+        videoEl.load();
+    }
+}
+
+function setViz2Reveal(percent) {
+    var value = Number(percent);
+    if (Number.isNaN(value)) value = 50;
+    if (value < 0) value = 0;
+    if (value > 100) value = 100;
+
+    var colorVideo = document.getElementById('viz2-color-video');
+    var divider = document.getElementById('viz2-color-depth-divider');
+    if (colorVideo) {
+        colorVideo.style.clipPath = 'inset(0 ' + (100 - value) + '% 0 0)';
+    }
+    if (divider) {
+        divider.style.left = value + '%';
+    }
+}
+
+function initializeViz2ColorDepth() {
+    var container = document.getElementById('viz2-scene-selector');
+    if (!container) return;
+    if (typeof DatasetSceneSelector === 'undefined') {
+        console.warn('DatasetSceneSelector module is not loaded.');
+        return;
+    }
+
+    var config = window.XSIM_VIZ2_COLOR_DEPTH_DATA || {};
+    var datasets = Array.isArray(config.datasets) ? config.datasets : [];
+
+    var selector = new DatasetSceneSelector(container, {
+        datasets: datasets,
+        onSelect: function(payload) {
+            updateViz2ColorDepth(payload);
+            container.dispatchEvent(new CustomEvent('scenechange', { detail: payload }));
+        }
+    });
+
+    selector.init();
+    window.xsimViz2SceneSelector = selector;
+
+    var slider = document.getElementById('viz2-reveal-slider');
+    if (slider && !slider.dataset.bound) {
+        slider.addEventListener('input', function(e) {
+            setViz2Reveal(e.target.value);
+        });
+        slider.dataset.bound = '1';
+        setViz2Reveal(slider.value || 50);
+    }
+
+    var colorVideo = document.getElementById('viz2-color-video');
+    var depthVideo = document.getElementById('viz2-depth-video');
+    syncVideoPair(colorVideo, depthVideo);
+}
+
+function updateViz2ColorDepth(payload) {
+    var label = document.getElementById('viz2-color-depth-label');
+    var empty = document.getElementById('viz2-color-depth-empty');
+    var viewer = document.getElementById('viz2-color-depth-viewer');
+    var colorVideo = document.getElementById('viz2-color-video');
+    var depthVideo = document.getElementById('viz2-depth-video');
+    var colorSource = document.getElementById('viz2-color-video-source');
+    var depthSource = document.getElementById('viz2-depth-video-source');
+
+    var datasetLabel = payload && payload.dataset ? (payload.dataset.label || payload.dataset.id || '') : '';
+    var sceneLabel = payload && payload.scene ? (payload.scene.label || payload.scene.id || '') : '';
+    var colorUrl = payload && payload.scene ? (payload.scene.colorUrl || payload.scene.sceneUrl || '') : '';
+    var depthUrl = payload && payload.scene ? (payload.scene.depthUrl || '') : '';
+
+    if (label) {
+        if (datasetLabel && sceneLabel) {
+            label.textContent = datasetLabel + ' - ' + sceneLabel + ' (Color / Depth)';
+        } else {
+            label.textContent = 'Color / Depth';
+        }
+    }
+
+    if (!colorUrl || !depthUrl) {
+        if (viewer) viewer.hidden = true;
+        if (empty) empty.hidden = false;
+        setVideoSource(colorVideo, colorSource, '');
+        setVideoSource(depthVideo, depthSource, '');
+        return;
+    }
+
+    setVideoSource(colorVideo, colorSource, colorUrl);
+    setVideoSource(depthVideo, depthSource, depthUrl);
+
+    if (viewer) viewer.hidden = false;
     if (empty) empty.hidden = true;
 }
 
@@ -211,5 +369,6 @@ $(document).ready(function() {
 
     // Dataset + scene selector (Viz 1)
     initializeViz1SceneSelector();
+    initializeViz2ColorDepth();
 
 })
