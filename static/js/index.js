@@ -343,8 +343,10 @@ function updateViz2ColorDepth(payload) {
     if (empty) empty.hidden = true;
 }
 
-$(document).ready(function() {
-    // Check for click events on the navbar burger icon
+function initializePageFeatures() {
+    // Initialize data-driven blocks first so they don't depend on carousel/plugin success.
+    initializeViz1SceneSelector();
+    initializeViz2ColorDepth();
 
     var options = {
 		slidesToScroll: 1,
@@ -353,22 +355,35 @@ $(document).ready(function() {
 		infinite: true,
 		autoplay: true,
 		autoplaySpeed: 5000,
-    }
+	};
 
 	// Initialize all div with carousel class
-    if (typeof bulmaCarousel !== 'undefined') {
-        bulmaCarousel.attach('.carousel', options);
+    try {
+      if (typeof bulmaCarousel !== 'undefined') {
+          bulmaCarousel.attach('.carousel', options);
+      }
+    } catch (error) {
+      console.error('Carousel initialization failed:', error);
     }
 	
-    if (typeof bulmaSlider !== 'undefined') {
-        bulmaSlider.attach();
+    try {
+      if (typeof bulmaSlider !== 'undefined') {
+          bulmaSlider.attach();
+      }
+    } catch (error) {
+      console.error('Slider initialization failed:', error);
     }
     
     // Setup video autoplay for carousel
     setupVideoCarouselAutoplay();
+}
 
-    // Dataset + scene selector (Viz 1)
-    initializeViz1SceneSelector();
-    initializeViz2ColorDepth();
-
-})
+if (window.jQuery && typeof window.jQuery.fn === 'object') {
+    window.jQuery(function() {
+        initializePageFeatures();
+    });
+} else if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePageFeatures);
+} else {
+    initializePageFeatures();
+}

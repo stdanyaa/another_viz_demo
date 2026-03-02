@@ -91,8 +91,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Defer non-critical JavaScript -->
-  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
   <script defer src="static/js/fontawesome.all.min.js"></script>
   <script defer src="static/js/bulma-carousel.min.js"></script>
   <script defer src="static/js/bulma-slider.min.js"></script>
@@ -222,6 +220,21 @@
       </div>
     </section>
 
+    <section class="section hero is-light" id="abstract">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+              <p>
+                We introduce XSIM, a sensor simulation framework for autonomous driving. XSIM extends 3DGUT splatting with a generalized rolling-shutter modeling tailored for autonomous driving applications. Our framework provides a unified and flexible formulation for appearance and geometric sensor modeling, enabling rendering of complex sensor distortions in dynamic environments. We identify spherical cameras, such as LiDARs, as a critical edge case for existing 3DGUT splatting due to cyclic projection and time discontinuities at azimuth boundaries leading to incorrect particle projection. To address this issue, we propose a phase modeling mechanism that explicitly accounts for temporal and shape discontinuities of Gaussians projected by the Unscented Transform at azimuth borders. In addition, we introduce an extended 3D Gaussian representation that incorporates two distinct opacity parameters to resolve mismatches between geometry and color distributions. As a result, our framework provides enhanced scene representations with improved geometric consistency and photorealistic appearance. We evaluate our framework extensively on multiple autonomous driving datasets, including Waymo Open Dataset, Argoverse 2, and PandaSet. Our framework consistently outperforms strong recent baselines and achieves state-of-the-art performance across all datasets.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section is-light" id="method">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Method</h2>
@@ -268,11 +281,12 @@
         <h2 class="title is-3">Visual Results & Comparisons</h2>
         <div class="content">
           <p>
-            This section contains two interactive visualizations.
+            This section contains two interactive visualizations and one modality-organized comparison block.
           </p>
           <ul>
             <li>Viz 1: scene selector with circle (novel-view) videos</li>
             <li>Viz 2: color/depth synchronized slider for regular views</li>
+            <li>Viz 3: modality-based method comparisons with per-scene image strips</li>
           </ul>
         </div>
 
@@ -316,6 +330,72 @@
             </div>
             <p id="viz2-color-depth-empty" class="is-size-7 has-text-grey mt-2" hidden>Missing color or depth URL for this scene.</p>
           </div>
+        </div>
+
+        <div class="box">
+          <h3 class="title is-5">Visualization 3: Cross-Method Comparisons (Carousel)</h3>
+          <p class="mb-3">
+            Organized by modality. Each slide is a single panorama scene image composed from method rows.
+          </p>
+
+          <div class="viz3-modality">
+            <h4 class="title is-6 mb-2">Regular Views (Panorama Rows)</h4>
+            <p class="is-size-7 has-text-grey mb-3">
+              Top-to-bottom rows in each slide: OmniRe, SplatAD, Ours.
+            </p>
+            <div class="carousel results-carousel viz3-carousel">
+              <div class="item item-viz3">
+                <img src="static/images/viz3/panorama/regular/344_f90_rows.png" alt="Regular-view panorama comparison for scene 344, method rows: OmniRe, SplatAD, Ours" loading="lazy">
+                <p class="subtitle has-text-centered">Scene 344 (f90)</p>
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/panorama/regular/552_f80_rows.png" alt="Regular-view panorama comparison for scene 552, method rows: OmniRe, SplatAD, Ours" loading="lazy">
+                <p class="subtitle has-text-centered">Scene 552 (f80)</p>
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/panorama/regular/94_f50_rows.png" alt="Regular-view panorama comparison for scene 094, method rows: OmniRe, SplatAD, Ours" loading="lazy">
+                <p class="subtitle has-text-centered">Scene 094 (f50)</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="viz3-modality">
+            <h4 class="title is-6 mb-2">Novel Views (Panorama Rows)</h4>
+            <p class="is-size-7 has-text-grey mb-3">
+              Top-to-bottom rows in each slide: OmniRe, SplatAD, Ours.
+            </p>
+            <div class="carousel results-carousel viz3-carousel">
+              <div class="item item-viz3">
+                <img src="static/images/viz3/panorama/novel/788_f20_3mleft_rows.png" alt="Novel-view panorama comparison for scene 788, method rows: OmniRe, SplatAD, Ours" loading="lazy">
+                <p class="subtitle has-text-centered">Scene 788 (f20, 3m left)</p>
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/panorama/novel/788_f20_3mleft_right_rows.png" alt="Novel-view panorama comparison for scene 788 right-shift variant, method rows: OmniRe, SplatAD, Ours" loading="lazy">
+                <p class="subtitle has-text-centered">Scene 788 (f20, 3m left-right)</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="viz3-modality">
+            <h4 class="title is-6 mb-2">Depth Views (Panorama Rows)</h4>
+            <p class="is-size-7 has-text-grey mb-3">
+              Top-to-bottom rows in each slide: OmniRe, SplatAD.
+            </p>
+            <div class="carousel results-carousel viz3-carousel">
+              <div class="item item-viz3">
+                <img src="static/images/viz3/panorama/depth/21_f50_rows.png" alt="Depth panorama comparison for scene 021, method rows: OmniRe and SplatAD" loading="lazy">
+                <p class="subtitle has-text-centered">Scene 021 (f50)</p>
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/panorama/depth/94_f30_rows.png" alt="Depth panorama comparison for scene 094, method rows: OmniRe and SplatAD" loading="lazy">
+                <p class="subtitle has-text-centered">Scene 094 (f30)</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="is-size-7 has-text-grey mt-4">
+            Static LiDAR renders and LiDAR video comparisons are intentionally deferred to the next pass.
+          </p>
         </div>
       </div>
     </section>

@@ -202,17 +202,17 @@ body {
 }
 
 .xsim-hero-top .hero-body {
-  padding-top: 3rem;
-  padding-bottom: 2.5rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2rem;
 }
 
 .xsim-main-title {
-  font-size: clamp(2.4rem, 6vw, 5.2rem) !important;
+  font-size: clamp(2.2rem, 5vw, 4.6rem) !important;
   letter-spacing: -0.03em;
   max-width: 18ch;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 2.25rem !important;
+  margin-bottom: 1.8rem !important;
 }
 
 .xsim-authors {
@@ -277,6 +277,28 @@ body {
   text-align: center;
   color: var(--text-secondary);
   font-size: 0.92rem;
+}
+
+/* Viz3: modality-organized image carousels */
+.viz3-modality + .viz3-modality {
+  margin-top: 2rem;
+}
+
+.viz3-carousel .item-viz3 {
+  padding: 1rem;
+}
+
+.viz3-carousel img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: #fff;
+}
+
+.viz3-carousel .subtitle {
+  margin-top: 0.65rem;
 }
 
 .publication-authors a:hover {
@@ -707,6 +729,10 @@ code {
 
   .method-inline-figure figcaption {
     font-size: 0.85rem;
+  }
+
+  .viz3-carousel .item-viz3 {
+    padding: 0.7rem;
   }
 
   .publication-authors {
