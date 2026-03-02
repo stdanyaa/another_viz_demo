@@ -212,7 +212,9 @@
       <div class="container is-max-desktop">
         <div class="hero-body">
           <div class="box">
-            <video autoplay controls muted loop playsinline preload="metadata" width="100%">
+            <!-- Generated with:
+                 LIDAR_CROP_TOP_PCT=18 LIDAR_CROP_BOTTOM_PCT=22 ./scripts/make_hero_composite_front3_lidar_tb_crop.sh 788 ./assets/hero_788_front3_lidar_tb_crop_t18_b22.mp4 -->
+            <video autoplay muted loop playsinline preload="metadata" width="100%">
               <source src="static/videos/hero.mp4" type="video/mp4">
             </video>
           </div>
@@ -297,7 +299,6 @@
           </p>
           <div id="viz1-scene-selector" class="scene-selector" aria-label="Dataset and scene selector"></div>
           <div class="mt-4">
-            <p id="viz1-scene-video-label" class="has-text-weight-semibold mb-2">Selected circle video</p>
             <video id="viz1-scene-video" controls muted playsinline preload="metadata" width="100%">
               <source id="viz1-scene-video-source" src="" type="video/mp4">
             </video>
@@ -386,9 +387,38 @@
             </div>
           </div>
 
-          <p class="is-size-7 has-text-grey mt-4">
-            Static LiDAR renders and LiDAR video comparisons are intentionally deferred to the next pass.
-          </p>
+          <div class="viz3-modality">
+            <h4 class="title is-6 mb-2">LiDAR Videos (Method Stack)</h4>
+            <p class="is-size-7 has-text-grey mb-3">
+              Left-to-right methods in each scene slide: GT, OmniRe, SplatAD, Ours (XSIM).
+            </p>
+            <div class="carousel results-carousel viz3-carousel viz3-lidar-carousel">
+              <div class="item item-viz3 item-viz3-lidar">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="static/videos/viz3/lidar/16_methods.mp4" type="video/mp4">
+                </video>
+                <p class="subtitle has-text-centered">Scene 016</p>
+              </div>
+              <div class="item item-viz3 item-viz3-lidar">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="static/videos/viz3/lidar/21_methods.mp4" type="video/mp4">
+                </video>
+                <p class="subtitle has-text-centered">Scene 021</p>
+              </div>
+              <div class="item item-viz3 item-viz3-lidar">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="static/videos/viz3/lidar/94_methods.mp4" type="video/mp4">
+                </video>
+                <p class="subtitle has-text-centered">Scene 094</p>
+              </div>
+              <div class="item item-viz3 item-viz3-lidar">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="static/videos/viz3/lidar/788_methods.mp4" type="video/mp4">
+                </video>
+                <p class="subtitle has-text-centered">Scene 788</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

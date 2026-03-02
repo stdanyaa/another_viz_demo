@@ -35,30 +35,6 @@ window.XSIM_VIZ1_SCENE_SELECTOR_DATA = {
           sceneUrl: "static/videos/viz1/waymo/555_circle.mp4"
         }
       ]
-    },
-    {
-      id: "pandaset",
-      label: "PandaSet",
-      scenes: [
-        {
-          id: "003",
-          label: "Scene 003",
-          thumbnail: "",
-          sceneUrl: ""
-        },
-        {
-          id: "017",
-          label: "Scene 017",
-          thumbnail: "",
-          sceneUrl: ""
-        },
-        {
-          id: "051",
-          label: "Scene 051",
-          thumbnail: "",
-          sceneUrl: ""
-        }
-      ]
     }
   ]
 };

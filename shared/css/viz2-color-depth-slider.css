@@ -36,22 +36,9 @@
   top: 0;
   bottom: 0;
   left: 50%;
-  width: 3px;
-  background: rgb(255 255 255 / 75%);
-  transform: translateX(-1.5px);
+  width: 2px;
+  background: rgb(255 255 255 / 82%);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 18%);
+  transform: translateX(-1px);
   pointer-events: none;
-}
-
-.viz2-slider-viewer__divider::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  background: #fff;
-  border: 2px solid rgb(0 0 0 / 20%);
-  transform: translate(-50%, -50%);
-  box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 }

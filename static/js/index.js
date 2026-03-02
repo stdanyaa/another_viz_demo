@@ -151,23 +151,10 @@ function initializeViz1SceneSelector() {
 function updateViz1ScenePreview(payload) {
     const video = document.getElementById('viz1-scene-video');
     const source = document.getElementById('viz1-scene-video-source');
-    const label = document.getElementById('viz1-scene-video-label');
     const empty = document.getElementById('viz1-scene-video-empty');
     if (!video || !source) return;
 
-    const datasetLabel = payload && payload.dataset ? (payload.dataset.label || payload.dataset.id || '') : '';
-    const sceneLabel = payload && payload.scene ? (payload.scene.label || payload.scene.id || '') : '';
     const sceneUrl = payload && payload.scene ? (payload.scene.sceneUrl || '') : '';
-
-    if (label) {
-        if (datasetLabel && sceneLabel) {
-            label.textContent = datasetLabel + ' - ' + sceneLabel;
-        } else if (sceneLabel) {
-            label.textContent = sceneLabel;
-        } else {
-            label.textContent = 'Selected circle video';
-        }
-    }
 
     if (!sceneUrl) {
         source.removeAttribute('src');
@@ -411,15 +398,16 @@ function initializePageFeatures() {
         slidesToShow: 1,
         loop: true,
         infinite: true,
-        autoplay: true,
+        autoplay: false,
         autoplaySpeed: 5000,
     };
     var viz3CarouselOptions = {
         slidesToScroll: 1,
         slidesToShow: 1,
         loop: true,
-        infinite: true,
-        autoplay: true,
+        infinite: false,
+        centerMode: false,
+        autoplay: false,
         autoplaySpeed: 5000,
         breakpoints: [{
             changePoint: 480,
