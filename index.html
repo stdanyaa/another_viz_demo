@@ -308,25 +308,18 @@
         <div class="box">
           <h3 class="title is-5">Visualization 2: Color / Depth Slider</h3>
           <p class="mb-3">
-            Select a scene and compare regular-view color and depth videos with a synchronized reveal slider.
+            Select a scene and drag directly on the video to reveal color vs depth.
           </p>
           <div id="viz2-scene-selector" class="scene-selector" aria-label="Color and depth scene selector"></div>
           <div class="mt-4">
-            <p id="viz2-color-depth-label" class="has-text-weight-semibold mb-2">Color / Depth</p>
             <div class="viz2-slider-viewer" id="viz2-color-depth-viewer">
-              <video id="viz2-depth-video" controls muted playsinline preload="metadata">
+              <video id="viz2-depth-video" autoplay loop muted playsinline preload="metadata">
                 <source id="viz2-depth-video-source" src="" type="video/mp4">
               </video>
-              <video id="viz2-color-video" class="viz2-slider-viewer__color-video" muted playsinline preload="metadata">
+              <video id="viz2-color-video" class="viz2-slider-viewer__color-video" autoplay loop muted playsinline preload="metadata">
                 <source id="viz2-color-video-source" src="" type="video/mp4">
               </video>
               <div id="viz2-color-depth-divider" class="viz2-slider-viewer__divider"></div>
-            </div>
-            <label class="label mt-3" for="viz2-reveal-slider">Color / Depth slider</label>
-            <input id="viz2-reveal-slider" class="slider is-fullwidth" step="1" min="0" max="100" value="50" type="range">
-            <div class="viz2-legend">
-              <span>Depth</span>
-              <span>Color</span>
             </div>
             <p id="viz2-color-depth-empty" class="is-size-7 has-text-grey mt-2" hidden>Missing color or depth URL for this scene.</p>
           </div>

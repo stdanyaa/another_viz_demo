@@ -245,12 +245,24 @@ function setVideoSource(videoEl, sourceEl, url) {
     if (!videoEl || !sourceEl) return;
     if (!url) {
         sourceEl.removeAttribute('src');
+        videoEl.pause();
+        videoEl.currentTime = 0;
         videoEl.load();
         return;
     }
     if (sourceEl.getAttribute('src') !== url) {
         sourceEl.setAttribute('src', url);
         videoEl.load();
+    }
+}
+
+function autoplayMutedVideo(videoEl) {
+    if (!videoEl) return;
+    videoEl.muted = true;
+    videoEl.loop = true;
+    var p = videoEl.play();
+    if (p && typeof p.catch === 'function') {
+        p.catch(function() {});
     }
 }
 
@@ -262,12 +274,72 @@ function setViz2Reveal(percent) {
 
     var colorVideo = document.getElementById('viz2-color-video');
     var divider = document.getElementById('viz2-color-depth-divider');
+    var viewer = document.getElementById('viz2-color-depth-viewer');
     if (colorVideo) {
         colorVideo.style.clipPath = 'inset(0 ' + (100 - value) + '% 0 0)';
     }
     if (divider) {
         divider.style.left = value + '%';
     }
+    if (viewer) {
+        viewer.dataset.reveal = String(value);
+    }
+}
+
+function initializeViz2RevealInteraction() {
+    var viewer = document.getElementById('viz2-color-depth-viewer');
+    if (!viewer || viewer.dataset.boundReveal === '1') return;
+
+    var isDragging = false;
+
+    function setRevealFromClientX(clientX) {
+        var rect = viewer.getBoundingClientRect();
+        if (!rect.width) return;
+        var x = clientX - rect.left;
+        if (x < 0) x = 0;
+        if (x > rect.width) x = rect.width;
+        setViz2Reveal((x / rect.width) * 100);
+    }
+
+    viewer.addEventListener('pointerdown', function(event) {
+        isDragging = true;
+        viewer.classList.add('is-dragging');
+        if (typeof viewer.setPointerCapture === 'function') {
+            try {
+                viewer.setPointerCapture(event.pointerId);
+            } catch (e) {
+                // no-op
+            }
+        }
+        setRevealFromClientX(event.clientX);
+    });
+
+    viewer.addEventListener('pointermove', function(event) {
+        if (!isDragging) return;
+        setRevealFromClientX(event.clientX);
+    });
+
+    function stopDrag(event) {
+        if (!isDragging) return;
+        isDragging = false;
+        viewer.classList.remove('is-dragging');
+        if (event && typeof viewer.releasePointerCapture === 'function') {
+            try {
+                viewer.releasePointerCapture(event.pointerId);
+            } catch (e) {
+                // no-op
+            }
+        }
+    }
+
+    viewer.addEventListener('pointerup', stopDrag);
+    viewer.addEventListener('pointercancel', stopDrag);
+    viewer.addEventListener('click', function(event) {
+        setRevealFromClientX(event.clientX);
+    });
+
+    viewer.dataset.boundReveal = '1';
+    setViz2Reveal(50);
 }
 
 function initializeViz2ColorDepth() {
@@ -292,22 +364,16 @@ function initializeViz2ColorDepth() {
     selector.init();
     window.xsimViz2SceneSelector = selector;
 
-    var slider = document.getElementById('viz2-reveal-slider');
-    if (slider && !slider.dataset.bound) {
-        slider.addEventListener('input', function(e) {
-            setViz2Reveal(e.target.value);
-        });
-        slider.dataset.bound = '1';
-        setViz2Reveal(slider.value || 50);
-    }
+    initializeViz2RevealInteraction();
 
     var colorVideo = document.getElementById('viz2-color-video');
     var depthVideo = document.getElementById('viz2-depth-video');
+    autoplayMutedVideo(colorVideo);
+    autoplayMutedVideo(depthVideo);
     syncVideoPair(colorVideo, depthVideo);
 }
 
 function updateViz2ColorDepth(payload) {
-    var label = document.getElementById('viz2-color-depth-label');
     var empty = document.getElementById('viz2-color-depth-empty');
     var viewer = document.getElementById('viz2-color-depth-viewer');
     var colorVideo = document.getElementById('viz2-color-video');
@@ -315,18 +381,8 @@ function updateViz2ColorDepth(payload) {
     var colorSource = document.getElementById('viz2-color-video-source');
     var depthSource = document.getElementById('viz2-depth-video-source');
 
-    var datasetLabel = payload && payload.dataset ? (payload.dataset.label || payload.dataset.id || '') : '';
-    var sceneLabel = payload && payload.scene ? (payload.scene.label || payload.scene.id || '') : '';
     var colorUrl = payload && payload.scene ? (payload.scene.colorUrl || payload.scene.sceneUrl || '') : '';
     var depthUrl = payload && payload.scene ? (payload.scene.depthUrl || '') : '';
-
-    if (label) {
-        if (datasetLabel && sceneLabel) {
-            label.textContent = datasetLabel + ' - ' + sceneLabel + ' (Color / Depth)';
-        } else {
-            label.textContent = 'Color / Depth';
-        }
-    }
 
     if (!colorUrl || !depthUrl) {
         if (viewer) viewer.hidden = true;
@@ -338,6 +394,8 @@ function updateViz2ColorDepth(payload) {
 
     setVideoSource(colorVideo, colorSource, colorUrl);
     setVideoSource(depthVideo, depthSource, depthUrl);
+    autoplayMutedVideo(colorVideo);
+    autoplayMutedVideo(depthVideo);
 
     if (viewer) viewer.hidden = false;
     if (empty) empty.hidden = true;
