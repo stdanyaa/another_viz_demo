@@ -348,19 +348,33 @@ function initializePageFeatures() {
     initializeViz1SceneSelector();
     initializeViz2ColorDepth();
 
-    var options = {
-		slidesToScroll: 1,
-		slidesToShow: 1,
-		loop: true,
-		infinite: true,
-		autoplay: true,
-		autoplaySpeed: 5000,
-	};
+    var defaultCarouselOptions = {
+        slidesToScroll: 1,
+        slidesToShow: 1,
+        loop: true,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 5000,
+    };
+    var viz3CarouselOptions = {
+        slidesToScroll: 1,
+        slidesToShow: 1,
+        loop: true,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 5000,
+        breakpoints: [{
+            changePoint: 2200,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+        }],
+    };
 
-	// Initialize all div with carousel class
+    // Initialize standard carousels and force Viz3 to stay 1-slide carousel on all widths.
     try {
       if (typeof bulmaCarousel !== 'undefined') {
-          bulmaCarousel.attach('.carousel', options);
+          bulmaCarousel.attach('.carousel:not(.viz3-carousel)', defaultCarouselOptions);
+          bulmaCarousel.attach('.viz3-carousel', viz3CarouselOptions);
       }
     } catch (error) {
       console.error('Carousel initialization failed:', error);
