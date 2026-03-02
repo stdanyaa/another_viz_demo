@@ -364,13 +364,21 @@ function initializePageFeatures() {
         autoplay: true,
         autoplaySpeed: 5000,
         breakpoints: [{
-            changePoint: 2200,
+            changePoint: 480,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+        }, {
+            changePoint: 640,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+        }, {
+            changePoint: 768,
             slidesToShow: 1,
             slidesToScroll: 1,
         }],
     };
 
-    // Initialize standard carousels and force Viz3 to stay 1-slide carousel on all widths.
+    // Initialize standard carousels; Viz3 is pinned to 1 slide for mobile breakpoints.
     try {
       if (typeof bulmaCarousel !== 'undefined') {
           bulmaCarousel.attach('.carousel:not(.viz3-carousel)', defaultCarouselOptions);
