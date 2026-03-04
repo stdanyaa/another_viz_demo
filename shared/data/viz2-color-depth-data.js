@@ -5,6 +5,22 @@ window.XSIM_VIZ2_COLOR_DEPTH_DATA = {
       label: "Waymo",
       scenes: [
         {
+          id: "016",
+          label: "Scene 016",
+          thumbnail: "static/images/viz1/waymo/016_front.jpg",
+          sceneUrl: "static/videos/viz2/waymo/016_color.mp4",
+          colorUrl: "static/videos/viz2/waymo/016_color.mp4",
+          depthUrl: "static/videos/viz2/waymo/016_depth.mp4"
+        },
+        {
+          id: "021",
+          label: "Scene 021",
+          thumbnail: "static/images/viz1/waymo/021_front.jpg",
+          sceneUrl: "static/videos/viz2/waymo/021_color.mp4",
+          colorUrl: "static/videos/viz2/waymo/021_color.mp4",
+          depthUrl: "static/videos/viz2/waymo/021_depth.mp4"
+        },
+        {
           id: "094",
           label: "Scene 094",
           thumbnail: "static/images/viz1/waymo/094_front.jpg",

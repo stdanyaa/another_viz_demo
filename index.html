@@ -213,9 +213,13 @@
         <div class="hero-body">
           <div class="box">
             <!-- Generated with:
+                 default (current):
+                 ./scripts/make_hero_alternative_coldepth_lidar.sh 788 ./page/static/videos/alternative_hero.mp4
+                 fallback:
                  LIDAR_CROP_TOP_PCT=18 LIDAR_CROP_BOTTOM_PCT=22 ./scripts/make_hero_composite_front3_lidar_tb_crop.sh 788 ./assets/hero_788_front3_lidar_tb_crop_t18_b22.mp4 -->
             <video autoplay muted loop playsinline preload="metadata" width="100%">
-              <source src="static/videos/hero.mp4" type="video/mp4">
+              <source src="static/videos/alternative_hero.mp4" type="video/mp4">
+              <!-- Easy fallback switch: static/videos/hero.mp4 -->
             </video>
           </div>
         </div>
@@ -286,38 +290,38 @@
     <!-- Visualizations section -->
     <section class="section" id="results">
       <div class="container is-max-desktop">
-        <h2 class="title is-3">Visual Results & Comparisons</h2>
+        <h2 class="title is-3">Visualizations</h2>
         <div class="content">
           <p>
-            This section contains two interactive visualizations and one modality-organized comparison block.
+            Explore:
           </p>
           <ul>
-            <li>Viz 1: scene selector with circle (novel-view) videos</li>
-            <li>Viz 2: color/depth synchronized slider for regular views</li>
-            <li>Viz 3: modality-based method comparisons with per-scene image strips</li>
+            <li>Scene renders</li>
+            <li>RGB + depth</li>
+            <li>Comparisons</li>
           </ul>
         </div>
 
         <div class="box">
-          <h3 class="title is-5">Visualization 1: Scene Selector</h3>
+          <h3 class="title is-5">Scene Renders</h3>
           <p class="mb-3">
-            Select a scene to view the corresponding circle trajectory (novel-view) video.
+            Select a scene to play the rendered sequence.
           </p>
-          <div id="viz1-scene-selector" class="scene-selector" aria-label="Dataset and scene selector"></div>
+          <div id="viz1-scene-selector" class="scene-selector" aria-label="Scene selector"></div>
           <div class="mt-4">
             <video id="viz1-scene-video" controls muted playsinline preload="metadata" width="100%">
               <source id="viz1-scene-video-source" src="" type="video/mp4">
             </video>
-            <p id="viz1-scene-video-empty" class="is-size-7 has-text-grey mt-2" hidden>No video URL for selected scene.</p>
+            <p id="viz1-scene-video-empty" class="is-size-7 has-text-grey mt-2" hidden>No video for selected scene.</p>
           </div>
         </div>
 
         <div class="box">
-          <h3 class="title is-5">Visualization 2: Color / Depth Slider</h3>
+          <h3 class="title is-5">RGB + Depth</h3>
           <p class="mb-3">
-            Select a scene and drag directly on the video to reveal color vs depth.
+            Select a scene and drag to compare RGB and depth.
           </p>
-          <div id="viz2-scene-selector" class="scene-selector" aria-label="Color and depth scene selector"></div>
+          <div id="viz2-scene-selector" class="scene-selector" aria-label="RGB and depth scene selector"></div>
           <div class="mt-4">
             <div class="viz2-slider-viewer" id="viz2-color-depth-viewer">
               <video id="viz2-depth-video" autoplay loop muted playsinline preload="metadata">
@@ -328,87 +332,120 @@
               </video>
               <div id="viz2-color-depth-divider" class="viz2-slider-viewer__divider"></div>
             </div>
-            <p id="viz2-color-depth-empty" class="is-size-7 has-text-grey mt-2" hidden>Missing color or depth URL for this scene.</p>
+            <p id="viz2-color-depth-empty" class="is-size-7 has-text-grey mt-2" hidden>No RGB/depth pair for selected scene.</p>
           </div>
         </div>
 
         <div class="box">
-          <h3 class="title is-5">Visualization 3: Cross-Method Comparisons (Carousel)</h3>
-          <p class="mb-3">
-            Organized by modality. Part 1 is generation, part 2 is novel, and part 3 is depth.
-          </p>
+          <h3 class="title is-5">Comparisons</h3>
 
           <div class="viz3-modality">
-            <h4 class="title is-6 mb-2">Part 1: Generation</h4>
+            <h4 class="title is-6 mb-2">Reference View</h4>
             <div class="carousel results-carousel viz3-carousel">
               <div class="item item-viz3">
-                <img src="static/images/viz3/generation/Frame%2044.png" alt="Generation comparison frame 44" loading="lazy">
+                <img src="static/images/viz3/generation/Frame%2073.png" alt="Reference-view comparison frame 73" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/generation/Frame%2041.png" alt="Generation comparison frame 41" loading="lazy">
+                <img src="static/images/viz3/generation/Frame%2074.png" alt="Reference-view comparison frame 74" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/generation/Frame%2043.png" alt="Generation comparison frame 43" loading="lazy">
+                <img src="static/images/viz3/generation/Frame%2068.png" alt="Reference-view comparison frame 68" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/generation/Frame%2037.png" alt="Generation comparison frame 37" loading="lazy">
+                <img src="static/images/viz3/generation/Frame%2069.png" alt="Reference-view comparison frame 69" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/generation/Frame%2038.png" alt="Generation comparison frame 38" loading="lazy">
+                <img src="static/images/viz3/generation/Frame%2070.png" alt="Reference-view comparison frame 70" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/generation/Frame%2039.png" alt="Generation comparison frame 39" loading="lazy">
+                <img src="static/images/viz3/generation/Frame%2071.png" alt="Reference-view comparison frame 71" loading="lazy">
               </div>
             </div>
           </div>
 
           <div class="viz3-modality">
-            <h4 class="title is-6 mb-2">Part 2: Novel</h4>
+            <h4 class="title is-6 mb-2">Novel View</h4>
             <div class="carousel results-carousel viz3-carousel">
               <div class="item item-viz3">
-                <img src="static/images/viz3/novel/Frame%208.png" alt="Novel comparison frame 8" loading="lazy">
+                <img src="static/images/viz3/novel/Frame%2051.png" alt="Novel-view comparison frame 51" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/novel/Frame%207.png" alt="Novel comparison frame 7" loading="lazy">
+                <img src="static/images/viz3/novel/Frame%2049.png" alt="Novel-view comparison frame 49" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/novel/Frame%2045.png" alt="Novel comparison frame 45" loading="lazy">
+                <img src="static/images/viz3/novel/Frame%2050.png" alt="Novel-view comparison frame 50" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/novel/Frame%209.png" alt="Novel comparison frame 9" loading="lazy">
+                <img src="static/images/viz3/novel/Frame%2047.png" alt="Novel-view comparison frame 47" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/novel/Frame%206.png" alt="Novel comparison frame 6" loading="lazy">
+                <img src="static/images/viz3/novel/Frame%2048.png" alt="Novel-view comparison frame 48" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/novel/Frame%2046.png" alt="Novel-view comparison frame 46" loading="lazy">
               </div>
             </div>
           </div>
 
           <div class="viz3-modality">
-            <h4 class="title is-6 mb-2">Part 3: Depth</h4>
+            <h4 class="title is-6 mb-2">Depth</h4>
             <div class="carousel results-carousel viz3-carousel">
               <div class="item item-viz3">
-                <img src="static/images/viz3/depth/555.png" alt="Depth comparison scene 555" loading="lazy">
+                <img src="static/images/viz3/depth/Frame%2096.png" alt="Depth comparison frame 96" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/depth/16.png" alt="Depth comparison scene 16" loading="lazy">
+                <img src="static/images/viz3/depth/Frame%2099.png" alt="Depth comparison frame 99" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/depth/21.png" alt="Depth comparison scene 21" loading="lazy">
+                <img src="static/images/viz3/depth/Frame%2087.png" alt="Depth comparison frame 87" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/depth/94.png" alt="Depth comparison scene 94" loading="lazy">
+                <img src="static/images/viz3/depth/Frame%2092.png" alt="Depth comparison frame 92" loading="lazy">
               </div>
               <div class="item item-viz3">
-                <img src="static/images/viz3/depth/344.png" alt="Depth comparison scene 344" loading="lazy">
+                <img src="static/images/viz3/depth/Frame%2095.png" alt="Depth comparison frame 95" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%2086.png" alt="Depth comparison frame 86" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%2089.png" alt="Depth comparison frame 89" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%20100.png" alt="Depth comparison frame 100" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%2088.png" alt="Depth comparison frame 88" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%20102.png" alt="Depth comparison frame 102" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%2097.png" alt="Depth comparison frame 97" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%20101.png" alt="Depth comparison frame 101" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%2094.png" alt="Depth comparison frame 94" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%2090.png" alt="Depth comparison frame 90" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%2093.png" alt="Depth comparison frame 93" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%2098.png" alt="Depth comparison frame 98" loading="lazy">
+              </div>
+              <div class="item item-viz3">
+                <img src="static/images/viz3/depth/Frame%2091.png" alt="Depth comparison frame 91" loading="lazy">
               </div>
             </div>
           </div>
 
           <div class="viz3-modality">
-            <h4 class="title is-6 mb-2">LiDAR Videos (Method Stack)</h4>
-            <p class="is-size-7 has-text-grey mb-3">
-              Left-to-right methods in each scene slide: GT, OmniRe, SplatAD, Ours (XSIM).
-            </p>
+            <h4 class="title is-6 mb-2">LiDAR</h4>
             <div class="carousel results-carousel viz3-carousel viz3-lidar-carousel">
               <div class="item item-viz3 item-viz3-lidar">
                 <video autoplay loop muted playsinline preload="metadata">

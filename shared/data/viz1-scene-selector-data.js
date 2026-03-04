@@ -5,6 +5,18 @@ window.XSIM_VIZ1_SCENE_SELECTOR_DATA = {
       label: "Waymo",
       scenes: [
         {
+          id: "016",
+          label: "Scene 016",
+          thumbnail: "static/images/viz1/waymo/016_front.jpg",
+          sceneUrl: "static/videos/viz1/waymo/016_composite.mp4"
+        },
+        {
+          id: "021",
+          label: "Scene 021",
+          thumbnail: "static/images/viz1/waymo/021_front.jpg",
+          sceneUrl: "static/videos/viz1/waymo/021_composite.mp4"
+        },
+        {
           id: "094",
           label: "Scene 094",
           thumbnail: "static/images/viz1/waymo/094_front.jpg",
