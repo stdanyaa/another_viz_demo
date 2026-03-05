@@ -22,6 +22,7 @@
   --border-radius-lg: 16px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --section-max-width: 1280px;
+  --method-illustration-max-width: 960px;
 }
 
 /* Smooth scrolling for better UX */
@@ -265,11 +266,12 @@ main .container.is-max-widescreen {
   color: var(--text-primary);
 }
 
-.method-inline-figure {
-  margin: 1rem 0 1.5rem;
+.method-content .method-inline-figure {
+  width: min(100%, var(--method-illustration-max-width));
+  margin: 1rem auto 1.5rem;
 }
 
-.method-inline-figure img {
+.method-content .method-inline-figure img {
   display: block;
   width: 100%;
   height: auto;
@@ -278,7 +280,7 @@ main .container.is-max-widescreen {
   background: #fff;
 }
 
-.method-inline-figure figcaption {
+.method-content .method-inline-figure figcaption {
   margin-top: 0.55rem;
   text-align: center;
   color: var(--text-secondary);
@@ -755,7 +757,7 @@ code {
     min-width: 0;
   }
 
-  .method-inline-figure figcaption {
+  .method-content .method-inline-figure figcaption {
     font-size: 0.85rem;
   }
 
