@@ -301,9 +301,11 @@
 
           <p>
             We also introduce an extended 3D Gaussian representation that incorporates two distinct opacity parameters
-            per Gaussian, jointly optimized for color and geometry distributions. To address the distribution mismatch
-            between appearance modeling and geometric sensing, we augment each Gaussian with separate opacity
-            parameters for camera and LiDAR rendering and regularize them during optimization (Fig. 3).
+            per Gaussian, jointly optimized for color and geometry distributions. Accurate appearance modeling
+            typically necessitates multiple transparent Gaussian particles to capture complex lighting effects,
+            whereas geometric sensors provide precise surface measurements that can be faithfully represented using a
+            single opaque Gaussian. To address this distribution mismatch, we augment each Gaussian with separate
+            opacity parameters for camera and LiDAR rendering and regularize them during optimization (Fig. 3).
           </p>
           <figure class="method-inline-figure">
             <img src="static/images/method/figure_5.png" alt="Figure 5 from the paper illustrating the LiDAR opacity component" loading="lazy">
