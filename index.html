@@ -249,45 +249,72 @@
         <h2 class="title is-3">Method</h2>
         <div class="content method-content">
           <p>
-            Spinning LiDAR sweeps are captured sequentially over time, so points within a single sweep correspond 
-            to different timestamps and different sensor poses. This becomes problematic at the azimuth wrap-around: 
-            azimuth is cyclic, but capture time jumps at the wrap, so points that are adjacent in azimuth can be 
-            far apart in time/pose, leading to missing, duplicated, or distorted projections (Fig. 1).
+            Building on 3DGUT, we introduce a sensor simulation framework that adapts 3DGUT splatting to
+            autonomous driving data. We further extend the framework with a generalized rolling-shutter modeling,
+            enabling accurate simulation of LiDAR and arbitrary camera sensors in unified manner.
+          </p>
+
+          <p>
+            Autonomous driving perception and planning algorithms primarily rely on two sensor modalities: cameras
+            and LiDARs. Both sensors typically operate in rolling shutter mode, in which sensor readings are acquired
+            sequentially over time in a row-by-row fashion. We also identify spherical cameras (i.e. LiDARs) as an
+            edge case of 3DGUT and propose a phase modeling mechanism to mitigate arising rendering issues near
+            azimuth borders (Fig. 1).
           </p>
           <figure class="method-inline-figure">
             <img src="static/images/method/figure_4.png" alt="Figure 4 from the paper showing the LiDAR temporal/spatial discontinuity problem" loading="lazy">
-            <figcaption>Figure 1. At the azimuth wrap, adjacent azimuth bins can correspond to timestamps far apart in the sweep.</figcaption>
+            <figcaption>
+              Figure 1. LiDAR discontinuities occurring near the azimuth border. a) Even when sensor is stationary
+              and covers exactly 360 degrees, time discontinuity due to the rolling shutter may lead to objects
+              observed twice. b) Ego movement in combination with rolling shutter leads to spatial discontinuities.
+            </figcaption>
           </figure>
 
           <p>
-            XSIM builds on 3DGUT Gaussian splatting (Unscented Transform projection) and extends 
-            it with a generalized rolling-shutter sensor model for both cameras and LiDAR. 
-            Each pixel/ray is associated with its capture time, and projection/rendering 
-            is done consistently with ego and actor motion at that time.
+            Our framework builds upon 3DGUT splatting, which leverages the Unscented Transform (UT) to approximate
+            the projection of a 3D Gaussian. The UT performs a posterior approximation under the assumption that the
+            projection of a 3D Gaussian can be adequately represented by a single 2D Gaussian. While this assumption
+            holds in many practical settings, it breaks down in scenarios involving spherical rolling-shutter sensors.
+            Near the azimuthal boundary, a single Gaussian particle may be observed multiple times or project into
+            separate shapes with different covariances and depths (Figs. 1 and 2).
           </p>
 
           <p>
-            <strong>Contribution 1 is phase modeling</strong> for spherical LiDAR at the azimuth seam. 
-            Near the wrap, a single Gaussian can produce sigma-point projections on both sides, 
-            and a standard UT fit collapses them into one incorrect footprint. XSIM evaluates 
-            additional azimuth-unwrapped projections (shifted by ±π) and keeps one or two 
-            consistent 2D projections near the boundary to avoid seam artifacts (Fig. 2).
+            In such cases, the projected distribution becomes multimodal, violating the assumptions inherent to the
+            UT. To address this limitation, we introduce a phase modeling mechanism for spherical camera rendering.
+            While conventional static spherical mappings retain only the principal solution, we explicitly account
+            for phase wrapping by considering k in {-1, 0, +1}. Since additional projections may differ in covariance
+            and depth to camera, in addition to the standard central projection, we perform auxiliary projections
+            shifted by ±π, estimate 2D Gaussian conics and depth for each interval, and pass valid projections to the
+            next tiling stage (Fig. 2).
           </p>
           <figure class="method-inline-figure">
             <img src="static/images/method/figure_6.png" alt="Figure 6 from the paper showing the proposed discontinuity solution mechanism" loading="lazy">
-            <figcaption>Figure 2. Phase modeling splits seam-spanning Gaussians into one or two projections across the wrap boundary.</figcaption>
+            <figcaption>
+              Figure 2. Single Gaussian particle spanning the azimuth boundaries
+              <code>(&phi; = &plusmn;&pi;)</code> of rolling-shutter spherical camera projects into two separate 2D
+              Gaussians with different 2D covariances. Unscented Transform provides unimodal posterior approximation
+              of particle projection, leading to overly large projections with incorrect shapes. Our phase modeling
+              mechanism enables bimodal 2D Gaussian projection by considering two additional projections shifted by
+              <code>&plusmn;&pi;</code> from visible range. By performing projections shifted by half period, we handle
+              particles whose sigma points fall into multiple azimuth periods.
+            </figcaption>
           </figure>
 
           <p>
-            <strong>Contribution 2 is LiDAR opacity addition.</strong> 
-            A single shared opacity conflicts between RGB appearance (often needs transparency/layers) 
-            and LiDAR geometry (surface-like opacity, and different material response such as glass). 
-            XSIM assigns per-Gaussian camera and LiDAR opacities and regularizes them during joint optimization
-             thus improving scene geometry and rendering quality (Fig. 3).
+            We also introduce an extended 3D Gaussian representation that incorporates two distinct opacity parameters
+            per Gaussian, jointly optimized for color and geometry distributions. Accurate appearance modeling
+            typically necessitates multiple transparent Gaussian particles to capture complex lighting effects,
+            whereas geometric sensors provide precise surface measurements that can be faithfully represented using a
+            single opaque Gaussian. To address this distribution mismatch, we augment each Gaussian with separate
+            opacity parameters for camera and LiDAR rendering and regularize them during optimization (Fig. 3).
           </p>
           <figure class="method-inline-figure">
             <img src="static/images/method/figure_5.png" alt="Figure 5 from the paper illustrating the LiDAR opacity component" loading="lazy">
-            <figcaption>Figure 3. Separate LiDAR opacity reduces artifacts compared to a single shared opacity.</figcaption>
+            <figcaption>
+              Figure 3. Modeling LiDAR opacity separately resolves geometry and color distributions mismatch, and
+              increases quality of appearance modeling for translucent surfaces and specular reflections.
+            </figcaption>
           </figure>
         </div>
       </div>
@@ -303,7 +330,7 @@
         <div class="box">
           <h3 class="title is-5">Scene Renders</h3>
           <p class="mb-3">
-            Select a scene to play the rendered sequence.
+            We show XSIM-rendered driving scenes from different Waymo sequences. These examples highlight temporal consistency, dynamic actors, and the overall visual realism of the simulated scenes.
           </p>
           <div id="viz1-scene-selector" class="scene-selector" aria-label="Scene selector"></div>
           <div class="mt-4">
@@ -317,7 +344,7 @@
         <div class="box">
           <h3 class="title is-5">RGB + Depth simulation</h3>
           <p class="mb-3">
-            Select a scene and drag to compare RGB and depth.
+            We show synchronized RGB and depth renderings of the same scene. This comparison highlights the consistency between appearance and geometry, especially around object boundaries and moving regions.
           </p>
           <div id="viz2-scene-selector" class="scene-selector" aria-label="RGB and depth scene selector"></div>
           <div class="mt-4">
@@ -336,9 +363,15 @@
 
         <div class="box">
           <h3 class="title is-5">Qualitative Comparisons</h3>
+          <p class="mb-4">
+            We compare XSIM against ground truth and recent baselines across several rendering settings: reference views, novel views, depth, and LiDAR simulation.
+          </p>
 
           <div class="viz3-modality">
             <h4 class="title is-6 mb-2">Reference frames</h4>
+            <p class="mb-3">
+              We compare renderings at observed camera views against ground truth. These examples highlight how well each method preserves scene details, textures, and dynamic objects with minimal blur and artifacts.
+            </p>
             <div class="carousel results-carousel viz3-carousel">
               <div class="item item-viz3">
                 <img src="static/images/viz3/generation/Frame%2073.png" alt="Reference-view comparison frame 73" loading="lazy">
@@ -363,6 +396,9 @@
 
           <div class="viz3-modality">
             <h4 class="title is-6 mb-2">Novel view generation</h4>
+            <p class="mb-3">
+              We compare renderings from unseen viewpoints. This setting reveals how well each method generalizes beyond the input views while preserving geometry, object appearance, and scene coherence.
+            </p>
             <div class="carousel results-carousel viz3-carousel">
               <div class="item item-viz3">
                 <img src="static/images/viz3/novel/Frame%2051.png" alt="Novel-view comparison frame 51" loading="lazy">
@@ -387,6 +423,9 @@
 
           <div class="viz3-modality">
             <h4 class="title is-6 mb-2">Rendering depth</h4>
+            <p class="mb-3">
+              We compare rendered depth maps across methods and against ground truth. The focus here is on object boundaries, surface consistency, and accurate relative distances in the scene.
+            </p>
             <div class="carousel results-carousel viz3-carousel">
               <div class="item item-viz3">
                 <img src="static/images/viz3/depth/Frame%2096.png" alt="Depth comparison frame 96" loading="lazy">
@@ -444,6 +483,9 @@
 
           <div class="viz3-modality">
             <h4 class="title is-6 mb-2">LiDAR simulation</h4>
+            <p class="mb-3">
+              We compare simulated LiDAR outputs against ground truth and baselines. These examples show how well XSIM preserves scan structure, object geometry, and challenging regions such as discontinuities near the azimuth seam.
+            </p>
             <div class="carousel results-carousel viz3-carousel viz3-lidar-carousel">
               <div class="item item-viz3 item-viz3-lidar">
                 <video autoplay loop muted playsinline preload="metadata">

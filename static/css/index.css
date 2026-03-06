@@ -23,6 +23,7 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --section-max-width: 1280px;
   --method-illustration-max-width: 960px;
+  --viz3-lidar-max-width: 1024px;
 }
 
 /* Smooth scrolling for better UX */
@@ -319,6 +320,12 @@ main .container.is-max-widescreen {
 
 .viz3-carousel .subtitle {
   margin-top: 0.65rem;
+}
+
+.viz3-lidar-carousel {
+  width: min(100%, var(--viz3-lidar-max-width));
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .viz3-lidar-carousel .item-viz3-lidar video {
