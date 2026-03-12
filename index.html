@@ -323,23 +323,9 @@
         <h2 class="title is-3">Visualizations</h2>
 
         <div class="box">
-          <h3 class="title is-5">Scene Renders</h3>
-          <p class="mb-3">
-            We show XSIM-rendered driving scenes from different Waymo sequences. These examples highlight temporal consistency, dynamic actors, and the overall visual realism of the simulated scenes.
-          </p>
-          <div id="viz1-scene-selector" class="scene-selector" aria-label="Scene selector"></div>
-          <div class="mt-4">
-            <video id="viz1-scene-video" controls muted playsinline preload="metadata" width="100%">
-              <source id="viz1-scene-video-source" src="" type="video/mp4">
-            </video>
-            <p id="viz1-scene-video-empty" class="is-size-7 has-text-grey mt-2" hidden>No video for selected scene.</p>
-          </div>
-        </div>
-
-        <div class="box">
           <h3 class="title is-5">RGB + Depth simulation</h3>
           <p class="mb-3">
-            We show synchronized RGB and depth renderings of the same scene. This comparison highlights the consistency between appearance and geometry, especially around object boundaries and moving regions.
+            We show synchronized RGB and depth renderings over driving sequences. Comparison highlights the consistency between reconstructed appearance and geometry, especially around object boundaries and moving regions.
           </p>
           <div id="viz2-scene-selector" class="scene-selector" aria-label="RGB and depth scene selector"></div>
           <div class="mt-4">
@@ -353,6 +339,20 @@
               <div id="viz2-color-depth-divider" class="viz2-slider-viewer__divider"></div>
             </div>
             <p id="viz2-color-depth-empty" class="is-size-7 has-text-grey mt-2" hidden>No RGB/depth pair for selected scene.</p>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3 class="title is-5">Novel view observations</h3>
+          <p class="mb-3">
+            We show how XSIM renders a scene as the camera circles around, highlighting realistic appearance and coherent geometry from novel viewpoints.
+          </p>
+          <div id="viz1-scene-selector" class="scene-selector" aria-label="Scene selector"></div>
+          <div class="mt-4">
+            <video id="viz1-scene-video" controls muted playsinline preload="metadata" width="100%">
+              <source id="viz1-scene-video-source" src="" type="video/mp4">
+            </video>
+            <p id="viz1-scene-video-empty" class="is-size-7 has-text-grey mt-2" hidden>No video for selected scene.</p>
           </div>
         </div>
 
