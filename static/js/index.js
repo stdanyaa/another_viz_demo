@@ -263,7 +263,7 @@ function setViz2Reveal(percent) {
     var divider = document.getElementById('viz2-color-depth-divider');
     var viewer = document.getElementById('viz2-color-depth-viewer');
     if (colorVideo) {
-        colorVideo.style.clipPath = 'inset(0 ' + (100 - value) + '% 0 0)';
+        colorVideo.style.clipPath = 'inset(0 0 0 ' + value + '%)';
     }
     if (divider) {
         divider.style.left = value + '%';
