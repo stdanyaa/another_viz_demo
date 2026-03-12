@@ -268,7 +268,14 @@ main .container.is-max-widescreen {
 }
 
 .method-content .method-inline-figure {
-  width: min(100%, var(--method-illustration-max-width));
+  --method-inline-figure-max-width: var(--method-illustration-max-width);
+  width: min(100%, var(--method-inline-figure-max-width));
+  margin: 1rem auto 1.5rem;
+}
+
+.method-content .method-inline-figure.method-inline-figure--compact {
+  --method-inline-figure-max-width: var(--method-illustration-max-width);
+  width: min(100%, calc(var(--method-illustration-max-width) * 0.75));
   margin: 1rem auto 1.5rem;
 }
 
