@@ -208,11 +208,12 @@ function syncVideoPair(videoA, videoB) {
     }
 
     var isSyncing = false;
+    var syncThreshold = 0.25;
 
-    function syncTime(src, dst) {
+    function syncTime(src, dst, threshold) {
         if (isSyncing) return;
         var delta = Math.abs((dst.currentTime || 0) - (src.currentTime || 0));
-        if (delta < 0.06) return;
+        if (delta < threshold) return;
         isSyncing = true;
         try {
             dst.currentTime = src.currentTime;
@@ -230,27 +231,24 @@ function syncVideoPair(videoA, videoB) {
         }
     }
 
-    [videoA, videoB].forEach(function(video, index) {
-        var other = index === 0 ? videoB : videoA;
-        video.addEventListener('play', function() {
-            syncPlayState(video, other);
-        });
-        video.addEventListener('pause', function() {
-            if (!other.paused) {
-                other.pause();
-            }
-        });
-        video.addEventListener('seeking', function() {
-            syncTime(video, other);
-        });
-        video.addEventListener('timeupdate', function() {
-            syncTime(video, other);
-        });
-        video.addEventListener('ratechange', function() {
-            if (other.playbackRate !== video.playbackRate) {
-                other.playbackRate = video.playbackRate;
-            }
-        });
+    videoA.addEventListener('play', function() {
+        syncPlayState(videoA, videoB);
+    });
+    videoA.addEventListener('pause', function() {
+        if (!videoB.paused) {
+            videoB.pause();
+        }
+    });
+    videoA.addEventListener('seeking', function() {
+        syncTime(videoA, videoB, 0.01);
+    });
+    videoA.addEventListener('timeupdate', function() {
+        syncTime(videoA, videoB, syncThreshold);
+    });
+    videoA.addEventListener('ratechange', function() {
+        if (videoB.playbackRate !== videoA.playbackRate) {
+            videoB.playbackRate = videoA.playbackRate;
+        }
     });
 
     videoA.dataset.syncedWith = videoB.id || 'paired';
@@ -281,6 +279,101 @@ function autoplayMutedVideo(videoEl, options) {
     if (p && typeof p.catch === 'function') {
         p.catch(function() {});
     }
+}
+
+var VIZ2_MIN_BUFFER_SECONDS = 2;
+var VIZ2_BUFFER_POLL_MS = 200;
+var viz2PlaybackGateTimer = 0;
+var viz2PlaybackGateRequest = 0;
+
+function clearViz2PlaybackGate() {
+    if (viz2PlaybackGateTimer) {
+        window.clearInterval(viz2PlaybackGateTimer);
+        viz2PlaybackGateTimer = 0;
+    }
+    viz2PlaybackGateRequest += 1;
+}
+
+function getBufferedAhead(videoEl) {
+    if (!videoEl || !videoEl.buffered) return 0;
+
+    var currentTime = Math.max(0, videoEl.currentTime || 0);
+    for (var i = 0; i < videoEl.buffered.length; i += 1) {
+        var start = videoEl.buffered.start(i);
+        var end = videoEl.buffered.end(i);
+        if (start <= currentTime + 0.05 && end > currentTime) {
+            return Math.max(0, end - currentTime);
+        }
+    }
+
+    return 0;
+}
+
+function hasViz2PlaybackBuffer(videoEl) {
+    if (!videoEl || !videoEl.currentSrc || videoEl.readyState < 2) {
+        return false;
+    }
+
+    var currentTime = Math.max(0, videoEl.currentTime || 0);
+    var remainingDuration = Number.isFinite(videoEl.duration)
+        ? Math.max(0, videoEl.duration - currentTime)
+        : VIZ2_MIN_BUFFER_SECONDS;
+    var requiredBuffer = Math.min(VIZ2_MIN_BUFFER_SECONDS, remainingDuration || VIZ2_MIN_BUFFER_SECONDS);
+
+    return getBufferedAhead(videoEl) >= Math.max(0.1, requiredBuffer - 0.05);
+}
+
+function prepareViz2Video(videoEl) {
+    if (!videoEl) return;
+    videoEl.muted = true;
+    videoEl.loop = true;
+    videoEl.preload = 'auto';
+}
+
+function scheduleViz2Playback(colorVideo, depthVideo) {
+    if (!colorVideo || !depthVideo) return;
+
+    clearViz2PlaybackGate();
+    prepareViz2Video(colorVideo);
+    prepareViz2Video(depthVideo);
+    colorVideo.pause();
+    depthVideo.pause();
+
+    var requestId = viz2PlaybackGateRequest;
+
+    function maybeStartPlayback() {
+        if (requestId !== viz2PlaybackGateRequest) return;
+        if (!hasViz2PlaybackBuffer(colorVideo) || !hasViz2PlaybackBuffer(depthVideo)) {
+            return;
+        }
+
+        clearViz2PlaybackGate();
+        autoplayMutedVideo(colorVideo);
+        autoplayMutedVideo(depthVideo);
+    }
+
+    maybeStartPlayback();
+    if (!viz2PlaybackGateTimer) {
+        viz2PlaybackGateTimer = window.setInterval(maybeStartPlayback, VIZ2_BUFFER_POLL_MS);
+    }
+}
+
+function bindViz2PlaybackGuard(colorVideo, depthVideo) {
+    if (!colorVideo || !depthVideo) return;
+    if (colorVideo.dataset.bufferGuardBound === '1' && depthVideo.dataset.bufferGuardBound === '1') {
+        return;
+    }
+
+    function handlePlaybackStall() {
+        if (!colorVideo.currentSrc || !depthVideo.currentSrc) return;
+        scheduleViz2Playback(colorVideo, depthVideo);
+    }
+
+    [colorVideo, depthVideo].forEach(function(videoEl) {
+        videoEl.addEventListener('waiting', handlePlaybackStall);
+        videoEl.addEventListener('stalled', handlePlaybackStall);
+        videoEl.dataset.bufferGuardBound = '1';
+    });
 }
 
 function setViz2Reveal(percent) {
@@ -369,6 +462,14 @@ function initializeViz2ColorDepth() {
 
     var config = window.XSIM_VIZ2_COLOR_DEPTH_DATA || {};
     var datasets = Array.isArray(config.datasets) ? config.datasets : [];
+    var colorVideo = document.getElementById('viz2-color-video');
+    var depthVideo = document.getElementById('viz2-depth-video');
+
+    initializeViz2RevealInteraction();
+    prepareViz2Video(colorVideo);
+    prepareViz2Video(depthVideo);
+    syncVideoPair(colorVideo, depthVideo);
+    bindViz2PlaybackGuard(colorVideo, depthVideo);
 
     var selector = new DatasetSceneSelector(container, {
         datasets: datasets,
@@ -380,14 +481,6 @@ function initializeViz2ColorDepth() {
 
     selector.init();
     window.xsimViz2SceneSelector = selector;
-
-    initializeViz2RevealInteraction();
-
-    var colorVideo = document.getElementById('viz2-color-video');
-    var depthVideo = document.getElementById('viz2-depth-video');
-    autoplayMutedVideo(colorVideo);
-    autoplayMutedVideo(depthVideo);
-    syncVideoPair(colorVideo, depthVideo);
 }
 
 function updateViz2ColorDepth(payload) {
@@ -404,6 +497,7 @@ function updateViz2ColorDepth(payload) {
     if (!colorUrl || !depthUrl) {
         if (viewer) viewer.hidden = true;
         if (empty) empty.hidden = false;
+        clearViz2PlaybackGate();
         setVideoSource(colorVideo, colorSource, '');
         setVideoSource(depthVideo, depthSource, '');
         return;
@@ -411,8 +505,7 @@ function updateViz2ColorDepth(payload) {
 
     setVideoSource(colorVideo, colorSource, colorUrl);
     setVideoSource(depthVideo, depthSource, depthUrl);
-    autoplayMutedVideo(colorVideo);
-    autoplayMutedVideo(depthVideo);
+    scheduleViz2Playback(colorVideo, depthVideo);
 
     if (viewer) viewer.hidden = false;
     if (empty) empty.hidden = true;
