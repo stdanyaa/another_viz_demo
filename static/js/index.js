@@ -123,41 +123,18 @@ function setupVideoCarouselAutoplay() {
     });
 }
 
-function initializeViz1SceneSelector() {
-    const container = document.getElementById('viz1-scene-selector');
-    if (!container) return;
-    if (typeof DatasetSceneSelector === 'undefined') {
-        console.warn('DatasetSceneSelector module is not loaded.');
-        return;
-    }
-
-    const config = window.XSIM_VIZ1_SCENE_SELECTOR_DATA || {};
-    const datasets = Array.isArray(config.datasets) ? config.datasets : [];
-
-    const selector = new DatasetSceneSelector(container, {
-        datasets: datasets,
-        onSelect: function(payload) {
-            const sceneUrl = payload && payload.scene ? payload.scene.sceneUrl || '' : '';
-            container.dataset.selectedSceneUrl = sceneUrl;
-            updateViz1ScenePreview(payload);
-            container.dispatchEvent(new CustomEvent('scenechange', { detail: payload }));
-        }
-    });
-
-    selector.init();
-    window.xsimViz1SceneSelector = selector;
-}
-
-function updateViz1ScenePreview(payload) {
-    const video = document.getElementById('viz1-scene-video');
-    const source = document.getElementById('viz1-scene-video-source');
-    const empty = document.getElementById('viz1-scene-video-empty');
+function updateSceneVideoPreview(videoId, sourceId, emptyId, payload, options) {
+    const video = document.getElementById(videoId);
+    const source = document.getElementById(sourceId);
+    const empty = document.getElementById(emptyId);
     if (!video || !source) return;
 
     const sceneUrl = payload && payload.scene ? (payload.scene.sceneUrl || '') : '';
 
     if (!sceneUrl) {
         source.removeAttribute('src');
+        video.pause();
+        video.currentTime = 0;
         video.load();
         video.hidden = true;
         if (empty) empty.hidden = false;
@@ -168,8 +145,60 @@ function updateViz1ScenePreview(payload) {
         source.setAttribute('src', sceneUrl);
         video.load();
     }
+    autoplayMutedVideo(video, options);
     video.hidden = false;
     if (empty) empty.hidden = true;
+}
+
+function initializeSceneVideoSelector(options) {
+    const opts = options || {};
+    const container = document.getElementById(opts.selectorId);
+    if (!container) return;
+    if (typeof DatasetSceneSelector === 'undefined') {
+        console.warn('DatasetSceneSelector module is not loaded.');
+        return;
+    }
+
+    const config = window[opts.dataKey] || {};
+    const datasets = Array.isArray(config.datasets) ? config.datasets : [];
+
+    const selector = new DatasetSceneSelector(container, {
+        datasets: datasets,
+        onSelect: function(payload) {
+            const sceneUrl = payload && payload.scene ? payload.scene.sceneUrl || '' : '';
+            container.dataset.selectedSceneUrl = sceneUrl;
+            updateSceneVideoPreview(opts.videoId, opts.sourceId, opts.emptyId, payload, opts);
+            container.dispatchEvent(new CustomEvent('scenechange', { detail: payload }));
+        }
+    });
+
+    selector.init();
+    if (opts.instanceKey) {
+        window[opts.instanceKey] = selector;
+    }
+}
+
+function initializeViz0SceneSelector() {
+    initializeSceneVideoSelector({
+        selectorId: 'viz0-scene-selector',
+        dataKey: 'XSIM_VIZ0_DRIVE_THROUGH_DATA',
+        videoId: 'viz0-scene-video',
+        sourceId: 'viz0-scene-video-source',
+        emptyId: 'viz0-scene-video-empty',
+        instanceKey: 'xsimViz0SceneSelector',
+        loop: false
+    });
+}
+
+function initializeViz1SceneSelector() {
+    initializeSceneVideoSelector({
+        selectorId: 'viz1-scene-selector',
+        dataKey: 'XSIM_VIZ1_SCENE_SELECTOR_DATA',
+        videoId: 'viz1-scene-video',
+        sourceId: 'viz1-scene-video-source',
+        emptyId: 'viz1-scene-video-empty',
+        instanceKey: 'xsimViz1SceneSelector'
+    });
 }
 
 function syncVideoPair(videoA, videoB) {
@@ -243,10 +272,11 @@ function setVideoSource(videoEl, sourceEl, url) {
     }
 }
 
-function autoplayMutedVideo(videoEl) {
+function autoplayMutedVideo(videoEl, options) {
     if (!videoEl) return;
+    var opts = options || {};
     videoEl.muted = true;
-    videoEl.loop = true;
+    videoEl.loop = opts.loop !== false;
     var p = videoEl.play();
     if (p && typeof p.catch === 'function') {
         p.catch(function() {});
@@ -390,6 +420,7 @@ function updateViz2ColorDepth(payload) {
 
 function initializePageFeatures() {
     // Initialize data-driven blocks first so they don't depend on carousel/plugin success.
+    initializeViz0SceneSelector();
     initializeViz1SceneSelector();
     initializeViz2ColorDepth();
 
